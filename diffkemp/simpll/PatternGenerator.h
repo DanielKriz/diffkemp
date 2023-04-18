@@ -2,6 +2,8 @@
 #define DIFFKEMP_SIMPLL_PATTERNGENERATOR_H
 
 #include "Config.h"
+#include "ModuleAnalysis.h"
+#include "Result.h"
 
 #include <llvm/ADT/SmallVector.h>
 #include <llvm/Analysis/MemorySSAUpdater.h>
@@ -16,20 +18,31 @@
 #include <llvm/Support/YAMLTraits.h>
 #include <llvm/Transforms/Utils/Cloning.h>
 
+using namespace llvm;
+
 #include <iostream>
+#include <memory>
 #include <unordered_map>
+#include <utility>
+
+// class Pattern {};
 
 class PatternGenerator {
   public:
     /// By default there is no pattern, hence it should be initialized to
     /// a nullptr.
-    PatternGenerator() : ctx(), isFreshRun(true){};
+    PatternGenerator() : firstCtx(), secondCtx(), isFreshRun(true){};
 
     virtual ~PatternGenerator() = default;
 
     void addFileForInference(std::string patternName,
                              std::string funcName,
                              std::string fileName);
+
+    [[nodiscard]] bool addFunctionToPattern(
+            std::pair<std::string, std::string> moduleFiles,
+            std::pair<std::string, std::string> funNames,
+            std::string patternName);
 
     friend std::ostream &operator<<(std::ostream &os, PatternGenerator &pg);
 
@@ -39,7 +52,8 @@ class PatternGenerator {
     /// config is found.
     // const Config &config;
     /// This has to be mutable in order to pass it to llvm::parseIRFile
-    mutable llvm::LLVMContext ctx;
+    mutable LLVMContext firstCtx;
+    mutable LLVMContext secondCtx;
     mutable bool isFreshRun;
     mutable std::unique_ptr<llvm::Module> pattern;
     mutable std::unordered_map<std::string, std::unique_ptr<llvm::Module>>
@@ -48,30 +62,15 @@ class PatternGenerator {
     void cloneFunction(llvm::Function &, llvm::Function &);
 };
 
-/// TODO: Finish this, I have to add this, because I have to be able to start
-/// the progrm as binary.
-///
-/// YAML mappings
-/// I am starting to think, that those are going to be not needed as I could
-/// invoke them in python, because it does not make a sense in C++ code.
-
-// class PatternSnapshot {
-//   public:
-//     std::string name;
-// };
-// using PatternSnapshotSequence = std::vector<PatternSnapshot>;
-
 struct PatternCandidate {
     std::string function{""};
-    std::vector<llvm::StringRef> snapshots;
-    PatternCandidate(){};
+    std::string alias{""};
+    std::string oldSnapshotPath;
+    std::string newSnapshotPath;
 };
 
-// using PatternCandidateSequence = std::vector<PatternCandidate>;
-// LLVM_YAML_IS_SEQUENCE_VECTOR(PatternCandidateSequence);
-// TODO: not sure about this naming
-class PatternGeneratorConfig {
-  public:
+struct PatternInfo {
+    std::string name;
     std::vector<PatternCandidate> candidates;
 };
 

@@ -12,6 +12,10 @@ def run_generate_pattern(function, files):
     lib.reportPattern()
 
 
+def run_pattern_info(path):
+    lib.readPatternConfig(ffi.new("char []", path.encode("ascii")))
+
+
 def _ptrarray_to_list(ptrarray):
     """Converts a ptr_array structure from SimpLL into a Python list."""
     result = []

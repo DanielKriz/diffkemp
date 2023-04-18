@@ -22,6 +22,14 @@ void generatePattern(std::string pattern,
                      std::string function,
                      std::string fileName);
 
+void generatePatternV2(std::string pattern,
+                       std::string first,
+                       std::string second,
+                       std::string f1,
+                       std::string f2);
+
+void readPatternConfigImpl(std::string configPath);
+
 void reportPatternImpl();
 
 #endif // DIFFKEMP_SIMPLL_PATTERN_ANALYSIS_H

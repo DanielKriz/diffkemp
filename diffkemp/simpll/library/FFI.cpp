@@ -218,8 +218,17 @@ struct kernel_param getData(const char *Sysctl, void *SysctlTableRaw) {
                         Result.indices.size()};
 }
 
+void readPatternConfig(const char *path) { readPatternConfigImpl(path); }
+
 void runGeneratePattern(const char *function, const char *fileName) {
-    generatePattern(function, fileName);
+    generatePattern("", function, fileName);
+}
+
+void runGeneratePatternV2(const char *firstFun,
+                          const char *firstFileName,
+                          const char *secondFun,
+                          const char *secondFileName) {
+    generatePatternV2(firstFun, secondFun, firstFileName, secondFileName, "");
 }
 
 void reportPattern() {
