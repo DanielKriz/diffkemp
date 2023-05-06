@@ -1,14 +1,5 @@
 #include "PatternAnalysis.h"
 
-std::pair<std::string, std::string> getFunNames(const std::string &str) {
-    size_t idx = str.find(',');
-    if (idx != std::string::npos) {
-        return std::make_pair(std::string(str.begin(), str.begin() + idx),
-                              std::string(str.begin() + idx + 1, str.end()));
-    }
-    return std::make_pair(str, "");
-}
-
 void readPatternConfig(std::string configPath) {
     std::vector<PatternInfo> patterns;
     auto buf = llvm::MemoryBuffer::getFile(configPath);
@@ -18,42 +9,44 @@ void readPatternConfig(std::string configPath) {
     for (const auto &pattern : patterns) {
         bool isGenerationSuccess = true;
         for (const auto &c : pattern.candidates) {
-            auto fPair = getFunNames(c.function);
-            fPair.second = fPair.second.empty() ? fPair.first : fPair.second;
+            auto FunPair = c.function.split(',');
+            FunPair.second =
+                    FunPair.second.empty() ? FunPair.first : FunPair.second;
 
-            auto NewSnapshotBuf =
-                    llvm::MemoryBuffer::getFile(c.newSnapshotPath);
             auto OldSnapshotBuf =
                     llvm::MemoryBuffer::getFile(c.oldSnapshotPath);
-            llvm::yaml::Input newYin(**NewSnapshotBuf);
+            auto NewSnapshotBuf =
+                    llvm::MemoryBuffer::getFile(c.newSnapshotPath);
             llvm::yaml::Input oldYin(**OldSnapshotBuf);
+            llvm::yaml::Input newYin(**NewSnapshotBuf);
 
-            std::vector<Snapshot> NewSnapshots;
             std::vector<Snapshot> OldSnapshots;
+            std::vector<Snapshot> NewSnapshots;
 
             newYin >> NewSnapshots;
             oldYin >> OldSnapshots;
 
-            std::string NewFunPath;
             std::string OldFunPath;
-            for (auto const &s : NewSnapshots) {
+            std::string NewFunPath;
+            for (auto const &s : OldSnapshots) {
                 for (auto const &f : s.Functions) {
-                    if (f.Name == fPair.first) {
-                        NewFunPath = s.SrcDir + "/" + f.PathToLLVM;
+                    if (f.Name == FunPair.first) {
+                        OldFunPath = s.SrcDir + "/" + f.PathToLLVM;
                     }
                 }
             }
-            for (auto const &s : OldSnapshots) {
+            for (auto const &s : NewSnapshots) {
                 for (auto const &f : s.Functions) {
-                    if (f.Name == fPair.second) {
-                        OldFunPath = s.SrcDir + "/" + f.PathToLLVM;
+                    if (f.Name == FunPair.second) {
+                        NewFunPath = s.SrcDir + "/" + f.PathToLLVM;
                     }
                 }
             }
 
             if (!gPatternGen->addFunctionPairToPattern(
                         std::make_pair(OldFunPath, NewFunPath),
-                        std::make_pair(fPair.first, fPair.second),
+                        std::make_pair(FunPair.first.str(),
+                                       FunPair.second.str()),
                         pattern.name)) {
                 isGenerationSuccess = false;
                 break;

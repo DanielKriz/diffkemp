@@ -238,9 +238,9 @@ void remapVariants(Function *src,
                    std::vector<InstructionVariant> &vars);
 
 struct PatternCandidate {
-    std::string function{""};
-    std::string oldSnapshotPath;
-    std::string newSnapshotPath;
+    StringRef function{""};
+    StringRef oldSnapshotPath;
+    StringRef newSnapshotPath;
 };
 
 struct PatternInfo {

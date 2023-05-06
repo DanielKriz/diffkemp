@@ -11,7 +11,6 @@
 #include "Snapshot.h"
 #include "Utils.h"
 
-std::pair<std::string, std::string> getFunNames(const std::string &str);
 
 static auto gPatternGen = std::make_unique<PatternGenerator>();
 void readPatternConfig(std::string configPath);
