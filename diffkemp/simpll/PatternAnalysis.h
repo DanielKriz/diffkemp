@@ -8,6 +8,7 @@
 #include "Config.h"
 #include "Output.h"
 #include "PatternGenerator.h"
+#include "Snapshot.h"
 #include "Utils.h"
 
 std::pair<std::string, std::string> getFunNames(const std::string &str);
