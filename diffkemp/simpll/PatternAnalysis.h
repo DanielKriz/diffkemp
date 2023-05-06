@@ -11,6 +11,7 @@
 #include "Snapshot.h"
 #include "Utils.h"
 
+using namespace llvm;
 
 static auto gPatternGen = std::make_unique<PatternGenerator>();
 void readPatternConfig(std::string configPath);

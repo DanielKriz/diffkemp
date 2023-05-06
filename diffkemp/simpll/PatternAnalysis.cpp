@@ -1,9 +1,10 @@
 #include "PatternAnalysis.h"
 
 void readPatternConfig(std::string configPath) {
+    using llvm::yaml::Input;
     std::vector<PatternInfo> patterns;
-    auto buf = llvm::MemoryBuffer::getFile(configPath);
-    llvm::yaml::Input yin(**buf);
+    auto buf = MemoryBuffer::getFile(configPath);
+    Input yin(**buf);
     yin >> patterns;
 
     for (const auto &pattern : patterns) {
@@ -13,12 +14,10 @@ void readPatternConfig(std::string configPath) {
             FunPair.second =
                     FunPair.second.empty() ? FunPair.first : FunPair.second;
 
-            auto OldSnapshotBuf =
-                    llvm::MemoryBuffer::getFile(c.oldSnapshotPath);
-            auto NewSnapshotBuf =
-                    llvm::MemoryBuffer::getFile(c.newSnapshotPath);
-            llvm::yaml::Input oldYin(**OldSnapshotBuf);
-            llvm::yaml::Input newYin(**NewSnapshotBuf);
+            auto OldSnapshotBuf = MemoryBuffer::getFile(c.oldSnapshotPath);
+            auto NewSnapshotBuf = MemoryBuffer::getFile(c.newSnapshotPath);
+            Input oldYin(**OldSnapshotBuf);
+            Input newYin(**NewSnapshotBuf);
 
             std::vector<Snapshot> OldSnapshots;
             std::vector<Snapshot> NewSnapshots;
@@ -65,18 +64,18 @@ void readPatternConfig(std::string configPath) {
                                                    "-var-" + std::to_string(i));
                 gPatternGen->determinePatternRange(pat, *varMod);
                 if (!varMod->empty()) {
-                    llvm::outs() << Color::makeYellow(
-                            "Generated Variant no. " + std::to_string(i) + ": ")
-                                 << varMod->getName().str() << "\n";
+                    outs() << Color::makeYellow("Generated Variant no. "
+                                                + std::to_string(i) + ": ")
+                           << varMod->getName().str() << "\n";
                     varMod->print(llvm::outs(), nullptr);
                     ++i;
                 }
             }
         } else {
-            llvm::outs() << Color::makeRed("Generation of pattern ")
-                         << Color::makeRed(" failed: ") << "pattern '"
-                         << pattern.name << "' could not be generated"
-                         << "\n";
+            outs() << Color::makeRed("Generation of pattern ")
+                   << Color::makeRed(" failed: ") << "pattern '" << pattern.name
+                   << "' could not be generated"
+                   << "\n";
         }
     }
 }
