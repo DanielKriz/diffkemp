@@ -123,7 +123,7 @@ class PatternRepresentation {
                 FunctionType::get(Type::getVoidTy(context), true);
         OutputMappingFun =
                 Function::Create(outputMappingFunType,
-                                 GlobalValue::LinkageTypes::InternalLinkage,
+                                 GlobalValue::LinkageTypes::ExternalLinkage,
                                  "diffkemp.output_mapping",
                                  mod.get());
     };
