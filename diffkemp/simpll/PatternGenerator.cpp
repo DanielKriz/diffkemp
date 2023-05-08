@@ -23,6 +23,16 @@ void PatternRepresentation::mapFunctionOutput(Function &fun) {
     }
 }
 
+void PatternRepresentation::renameSides(std::string newName) {
+    for (auto &Fun : {functions.first, functions.second}) {
+        StringRef FunName = Fun->getName();
+        /// At this point we have sides of the pattern, therefore, we can
+        /// expect that the names have diffkemp.(old|new). prefix
+        Fun->setName(FunName.str().replace(
+                FunName.rfind('.') + 1, FunName.size() - 1, newName));
+    }
+}
+
 std::unique_ptr<Module> PatternRepresentation::generateVariant(
         std::pair<std::vector<InstructionVariant>,
                   std::vector<InstructionVariant>> var,

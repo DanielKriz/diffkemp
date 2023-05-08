@@ -54,8 +54,9 @@ void readPatternConfig(std::string configPath) {
         if (isGenerationSuccess) {
             std::cout << Color::makeGreen("Successfule generation of pattern: ")
                       << pattern.name << std::endl;
-            std::cout << *(*gPatternGen)[pattern.name] << std::endl;
             auto pat = (*gPatternGen)[pattern.name];
+            pat->renameSides("side");
+            std::cout << *pat << std::endl;
             int i = 0;
             for (auto varIter = pat->variants.begin();
                  varIter != pat->variants.end();

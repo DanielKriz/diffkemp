@@ -136,6 +136,7 @@ class PatternRepresentation {
     void applyVariant(std::vector<InstructionVariant> &var,
                       Function *VarFun,
                       bool isLeftSide);
+    void renameSides(std::string newName);
 
     std::unique_ptr<Module> mod;
     std::pair<std::string, std::string> funNames;
