@@ -4,6 +4,7 @@
 #include "Config.h"
 #include "DebugInfo.h"
 #include "DifferentialFunctionComparator.h"
+#include "InstructionVariant.h"
 #include "ModuleAnalysis.h"
 #include "Output.h"
 #include "Result.h"
@@ -32,63 +33,6 @@ using namespace llvm;
 #include <memory>
 #include <unordered_map>
 #include <utility>
-
-class StructTypeRemapper : public ValueMapTypeRemapper {
-  private:
-    std::map<Type *, Type *> remapperMap;
-
-  public:
-    StructTypeRemapper() : remapperMap(){};
-    StructTypeRemapper(std::map<Type *, Type *> newMap) : remapperMap(newMap){};
-    virtual Type *remapType(Type *srcType) override {
-        for (auto &remapping : remapperMap) {
-            if (srcType == remapping.first) {
-                return remapping.second;
-            }
-        }
-        return srcType;
-    }
-    inline void addNewMapping(StructType *from, StructType *to) {
-        remapperMap.insert({from, to});
-    }
-    inline bool empty() { return remapperMap.empty(); }
-};
-
-struct InstructionVariant {
-    struct GlobalVariableInfo {
-        std::string name;
-        Type *type;
-        GlobalVariable::LinkageTypes linkage;
-        MaybeAlign align;
-    };
-
-    enum Kind {
-        TYPE,
-        GLOBAL,
-    };
-
-    InstructionVariant(Instruction *encounterInst, Type *type, size_t opPos = 0)
-            : inst(encounterInst), kind(InstructionVariant::TYPE),
-              newType(type), opPos(opPos){};
-    InstructionVariant(Instruction *encounterInst,
-                       GlobalVariable *global,
-                       size_t opPos = 0)
-            : inst(encounterInst), kind(InstructionVariant::GLOBAL),
-              newGlobal(global), opPos(opPos) {
-        newGlobalInfo = GlobalVariableInfo{};
-        newGlobalInfo.type = global->getType();
-        newGlobalInfo.name = global->getName().str();
-        newGlobalInfo.linkage = global->getLinkage();
-        newGlobalInfo.align = global->getAlign();
-    };
-
-    Instruction *inst;
-    Kind kind;
-    Type *newType{nullptr};
-    GlobalVariable *newGlobal{nullptr};
-    unsigned opPos;
-    GlobalVariableInfo newGlobalInfo;
-};
 
 class PatternRepresentation {
     friend std::ostream &operator<<(std::ostream &os,
