@@ -7,6 +7,7 @@
 #include "InstructionVariant.h"
 #include "ModuleAnalysis.h"
 #include "Output.h"
+#include "PatternBase.h"
 #include "Result.h"
 #include "Utils.h"
 #include "passes/StructureSizeAnalysis.h"
@@ -34,72 +35,6 @@ using namespace llvm;
 #include <unordered_map>
 #include <utility>
 
-class PatternRepresentation {
-    friend std::ostream &operator<<(std::ostream &os,
-                                    PatternRepresentation &pg);
-    friend class PatternGenerator;
-
-  private:
-    /// This has to be predeclared, because public Module needs it for its
-    /// construction. But on the other hand, there is no reason to make the
-    /// context public.
-    LLVMContext context;
-    Function *OutputMappingFun;
-
-    void replaceStructRelatedInst(Instruction &Inst, InstructionVariant &var);
-    void replaceGlobalRelatedInst(Instruction &inst, InstructionVariant &var);
-    void mapFunctionOutput(Function &fun);
-
-  public:
-    PatternRepresentation(std::string name,
-                          std::string funFirstName,
-                          std::string funSecondName)
-            : context(), mod(new Module(name, context)),
-              funNames(funFirstName, funSecondName),
-              functions(nullptr, nullptr),
-              MDMap({{PATTERN_START,
-                      MDNode::get(context,
-                                  MDString::get(context, "pattern-start"))},
-                     {PATTERN_END,
-                      MDNode::get(context,
-                                  MDString::get(context, "pattern-end"))}}) {
-        auto outputMappingFunType =
-                FunctionType::get(Type::getVoidTy(context), true);
-        OutputMappingFun =
-                Function::Create(outputMappingFunType,
-                                 GlobalValue::LinkageTypes::ExternalLinkage,
-                                 "diffkemp.output_mapping",
-                                 mod.get());
-    };
-    void refreshFunctions();
-
-    std::unique_ptr<Module>
-            generateVariant(std::pair<std::vector<InstructionVariant>,
-                                      std::vector<InstructionVariant>> var,
-                            std::string variantSuffix = "");
-    void applyVariant(std::vector<InstructionVariant> &var,
-                      Function *VarFun,
-                      bool isLeftSide);
-    void renameSides(std::string newName);
-
-    std::unique_ptr<Module> mod;
-    std::pair<std::string, std::string> funNames;
-    std::pair<Function *, Function *> functions;
-    std::vector<std::vector<InstructionVariant>> variants;
-    bool isMetadataSet{false};
-
-  private:
-    enum Metadata {
-        PATTERN_START,
-        PATTERN_END,
-        DISSABLE_NAME_COMPARISON,
-        GROUP_START,
-        GROUP_END,
-    };
-    std::unordered_map<PatternRepresentation::Metadata, MDNode *> MDMap;
-    bool MDSet{false};
-};
-
 class PatternGenerator {
   public:
     /// By default there is no pattern, hence it should be initialized to
@@ -122,11 +57,11 @@ class PatternGenerator {
             std::pair<std::string, std::string> funNames,
             std::string patternName);
 
-    PatternRepresentation *operator[](std::string patternName) {
+    PatternBase *operator[](std::string patternName) {
         return patterns[patternName].get();
     }
 
-    void determinePatternRange(PatternRepresentation *PatRep, Module &mod);
+    void determinePatternRange(PatternBase *PatBase, Module &mod);
 
   private:
     class MinimalModuleAnalysis {
@@ -157,8 +92,9 @@ class PatternGenerator {
     /// This has to be mutable in order to pass it to llvm::parseIRFile
     mutable LLVMContext firstCtx;
     mutable LLVMContext secondCtx;
-    mutable std::map<std::string, std::unique_ptr<PatternRepresentation>>
-            patterns;
+
+    /// Store of base patterns.
+    std::map<std::string, std::unique_ptr<PatternBase>> patterns;
 
     // DifferentialFunctionComparator diffFunComp;
     void attachMetadata(Instruction *instr, std::string metadataStr);

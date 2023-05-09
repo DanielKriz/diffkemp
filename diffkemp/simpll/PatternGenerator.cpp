@@ -1,148 +1,6 @@
 #include "PatternGenerator.h"
 
-void PatternRepresentation::refreshFunctions() {
-    functions.first = mod->getFunction(funNames.first);
-    functions.second = mod->getFunction(funNames.second);
-}
 
-void PatternRepresentation::mapFunctionOutput(Function &fun) {
-    for (auto &BB : fun) {
-        for (auto &Inst : BB) {
-            if (auto RetInst = dyn_cast<ReturnInst>(&Inst)) {
-                CallInst::Create(OutputMappingFun->getFunctionType(),
-                                 OutputMappingFun,
-                                 ArrayRef<Value *>(RetInst->getReturnValue()),
-                                 "",
-                                 RetInst);
-                ReplaceInstWithInst(
-                        RetInst,
-                        ReturnInst::Create(fun.getContext(), nullptr, RetInst));
-                break;
-            }
-        }
-    }
-}
-
-void PatternRepresentation::renameSides(std::string newName) {
-    for (auto &Fun : {functions.first, functions.second}) {
-        StringRef FunName = Fun->getName();
-        /// At this point we have sides of the pattern, therefore, we can
-        /// expect that the names have diffkemp.(old|new). prefix
-        Fun->setName(FunName.str().replace(
-                FunName.rfind('.') + 1, FunName.size() - 1, newName));
-    }
-}
-
-std::unique_ptr<Module> PatternRepresentation::generateVariant(
-        std::pair<std::vector<InstructionVariant>,
-                  std::vector<InstructionVariant>> var,
-        std::string variantSuffix) {
-
-    auto varMod = std::make_unique<Module>(mod->getName().str() + variantSuffix,
-                                           this->context);
-
-    /// It is impossible to have an odd number of variants, as we are inserting
-    /// even empty ones.
-    assert(variants.size() % 2 == 0);
-
-    /// Perform no variation, if both variation vectors are empty.
-    if (var.first.empty() && var.second.empty()) {
-        return varMod;
-    }
-    auto VarFunL = cloneFunction(varMod.get(),
-                                 functions.first,
-                                 "",
-                                 {},
-                                 Type::getVoidTy(varMod->getContext()));
-    auto VarFunR = cloneFunction(varMod.get(),
-                                 functions.second,
-                                 "",
-                                 {},
-                                 Type::getVoidTy(varMod->getContext()));
-
-    applyVariant(var.first, VarFunL, true);
-    applyVariant(var.second, VarFunR, false);
-
-    /// Apply output mapping
-    mapFunctionOutput(*VarFunL);
-    mapFunctionOutput(*VarFunR);
-
-    return varMod;
-}
-
-void PatternRepresentation::replaceStructRelatedInst(Instruction &Inst,
-                                                     InstructionVariant &var) {
-    if (auto InstAlloca = dyn_cast<AllocaInst>(&Inst)) {
-        auto NewInstAlloca = new AllocaInst(var.newType, 0, "", &Inst);
-        NewInstAlloca->setAlignment(InstAlloca->getAlign());
-        InstAlloca->replaceAllUsesWith(NewInstAlloca);
-        InstAlloca->eraseFromParent();
-    } else if (auto InstGep = dyn_cast<GetElementPtrInst>(&Inst)) {
-        std::vector<Value *> operands;
-        for (auto &op : InstGep->operands()) {
-            operands.push_back(op);
-        }
-        auto ptr = operands[0];
-        operands.erase(operands.begin());
-        auto NewInstGep = GetElementPtrInst::Create(
-                var.newType, ptr, operands, "", InstGep);
-        InstGep->replaceAllUsesWith(NewInstGep);
-        InstGep->eraseFromParent();
-    }
-}
-
-void PatternRepresentation::replaceGlobalRelatedInst(Instruction &Inst,
-                                                     InstructionVariant &var) {
-    GlobalVariable *newGlobal = nullptr;
-    auto varMod = Inst.getParent()->getParent()->getParent();
-    for (auto &global : mod->globals()) {
-        if (var.newGlobal->getName() == global.getName()) {
-            newGlobal = &global;
-            break;
-        }
-    }
-    if (!newGlobal) {
-        newGlobal = new GlobalVariable(*varMod,
-                                       var.newGlobalInfo.type,
-                                       false,
-                                       var.newGlobalInfo.linkage,
-                                       0,
-                                       var.newGlobalInfo.name);
-        newGlobal->setAlignment(var.newGlobalInfo.align);
-    }
-    Inst.getOperandUse(var.opPos).set(newGlobal);
-}
-
-void PatternRepresentation::applyVariant(std::vector<InstructionVariant> &vars,
-                                         Function *VarFun,
-                                         bool isLeftSide) {
-    Function *Fun = isLeftSide ? functions.first : functions.second;
-    for (auto &var : vars) {
-        bool found = false;
-        for (auto BBL = Fun->begin(), BBR = VarFun->begin(); BBL != Fun->end();
-             ++BBL, ++BBR) {
-            for (auto InstL = BBL->begin(), InstR = BBR->begin();
-                 InstL != BBL->end();
-                 ++InstL, ++InstR) {
-                if (&(*InstL) == var.inst) {
-                    switch (var.kind) {
-                    case InstructionVariant::TYPE:
-                        replaceStructRelatedInst(*InstR, var);
-                        break;
-                    case InstructionVariant::GLOBAL:
-                        replaceGlobalRelatedInst(*InstR, var);
-                        break;
-                    }
-                    found = true;
-                    break;
-                }
-            }
-            if (found) {
-                break;
-            }
-        }
-    }
-}
 
 PatternGenerator::MinimalModuleAnalysis::MinimalModuleAnalysis(Config &conf) {
     conf.refreshFunctions();
@@ -173,8 +31,7 @@ PatternGenerator::MinimalModuleAnalysis::MinimalModuleAnalysis(Config &conf) {
     addFunPair(std::make_pair(conf.FirstFun, conf.SecondFun));
 }
 
-void PatternGenerator::determinePatternRange(PatternRepresentation *PatRep,
-                                             Module &mod) {
+void PatternGenerator::determinePatternRange(PatternBase *PatRep, Module &mod) {
     auto FunL = mod.getFunction(PatRep->functions.first->getName());
     auto FunR = mod.getFunction(PatRep->functions.second->getName());
 
@@ -260,7 +117,7 @@ void PatternGenerator::attachMetadata(Instruction *instr,
 }
 
 
-void PatternGenerator::reduceFunctions(PatternRepresentation &patRep) {
+void PatternGenerator::reduceFunctions(PatternBase &patRep) {
     std::vector<std::string> funNames;
     for (auto &fun : patRep.mod->getFunctionList()) {
         funNames.push_back(fun.getName().str());
@@ -512,7 +369,7 @@ bool PatternGenerator::addFunctionPairToPattern(
     if (this->patterns.find(patternName) == this->patterns.end()) {
         const std::string oldPrefix = "diffkemp.old.";
         const std::string newPrefix = "diffkemp.new.";
-        this->patterns[patternName] = std::make_unique<PatternRepresentation>(
+        this->patterns[patternName] = std::make_unique<PatternBase>(
                 patternName,
                 (oldPrefix + FunL->getName()).str(),
                 (newPrefix + FunR->getName()).str());
@@ -567,7 +424,7 @@ bool PatternGenerator::isValueGlobal(Value &val, Module &mod) {
     return false;
 }
 
-std::ostream &operator<<(std::ostream &os, PatternRepresentation &pat) {
+std::ostream &operator<<(std::ostream &os, PatternBase &pat) {
     std::string tmpStr;
     raw_string_ostream tmp(tmpStr);
     tmp << *(pat.mod);
