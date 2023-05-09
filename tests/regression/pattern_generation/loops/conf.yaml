@@ -1,0 +1,5 @@
+- name: simple_function_pattern
+  candidates:
+  - name: simple_function
+    old_snapshot_path: tests/regression/pattern_generation/simple_function/old_snapshot/snapshot.yaml
+    new_snapshot_path: tests/regression/pattern_generation/simple_function/new_snapshot/snapshot.yaml

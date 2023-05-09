@@ -1,0 +1,3 @@
+on_parse_failure: ERROR
+patterns:
+ - tests/regression/pattern_generation/simple_with_same_function/simple_with_same_function_out.ll

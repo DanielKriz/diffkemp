@@ -1,0 +1,8 @@
+- name: simple_function_parametrized_pattern
+  candidates:
+  - name: simple_function_parametrized
+    old_snapshot_path: tests/regression/pattern_generation/simple_function_parametrized/old_snapshot/snapshot.yaml
+    new_snapshot_path: tests/regression/pattern_generation/simple_function_parametrized/new_snapshot/snapshot.yaml
+  - name: simple_function_parametrized
+    new_snapshot_path: tests/regression/pattern_generation/simple_function_parametrized/old_snapshot/snapshot.yaml
+    old_snapshot_path: tests/regression/pattern_generation/simple_function_parametrized/new_snapshot/snapshot.yaml

@@ -1,0 +1,5 @@
+- name: simple_function_with_globals_pattern
+  candidates:
+  - name: simple_function_with_globals
+    old_snapshot_path: tests/regression/pattern_generation/simple_function_with_globals/old_snapshot/snapshot.yaml
+    new_snapshot_path: tests/regression/pattern_generation/simple_function_with_globals/new_snapshot/snapshot.yaml

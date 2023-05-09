@@ -1,0 +1,56 @@
+test_specs:
+  - name: simple_function
+    conf: conf.yaml
+    outputs:
+      - simple_function_out.ll
+    should_generate: true
+    should_match_out: true
+  - name: simple_function
+    conf: param_conf.yaml
+    outputs:
+      - param_simple_function_out.ll
+    should_generate: false
+    should_match_out: true
+  - name: simple_function_with_globals
+    conf: conf.yaml
+    outputs:
+      - simple_function_with_globals_out.ll
+    should_generate: true
+    should_match_out: true
+  - name: branching
+    conf: conf.yaml
+    outputs:
+      - branching_out.ll
+    should_generate: true
+    should_match_out: true
+  - name: simple_function_parametrized
+    conf: conf.yaml
+    outputs:
+      - simple_function_parametrized_out.ll
+    should_generate: true
+    should_match_out: true
+  - name: structure_usage
+    conf: conf.yaml
+    outputs:
+      - structure_usage_out.ll
+    should_generate: true
+    should_match_out: true
+  - name: simple_with_same_function
+    conf: conf.yaml
+    outputs: 
+      - simple_with_same_function_out.ll
+    should_generate: true
+    should_match_out: true
+  - name: simple_with_same_function_different_value
+    conf: conf.yaml
+    outputs: 
+      - simple_with_same_function_different_value_out.ll
+    should_generate: true
+    should_match_out: false
+  - name: structure_usage_variant
+    conf: conf.yaml
+    outputs: 
+      - structure_usage_variant_out.ll
+      - structure_usage_variant_other_out.ll
+    should_generate: true
+    should_match_out: true

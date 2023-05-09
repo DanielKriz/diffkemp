@@ -1,0 +1,8 @@
+- name: structure_usage_variant_pattern
+  candidates:
+  - name: structure_usage
+    old_snapshot_path: tests/regression/pattern_generation/structure_usage_variant/old_snapshot/snapshot.yaml
+    new_snapshot_path: tests/regression/pattern_generation/structure_usage_variant/new_snapshot/snapshot.yaml
+  - name: structure_usage,structure_usage_other
+    old_snapshot_path: tests/regression/pattern_generation/structure_usage_variant/old_snapshot/snapshot.yaml
+    new_snapshot_path: tests/regression/pattern_generation/structure_usage_variant/new_snapshot/snapshot.yaml

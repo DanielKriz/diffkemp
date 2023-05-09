@@ -1,0 +1,5 @@
+- name: branching_pattern
+  candidates:
+  - name: branching
+    old_snapshot_path: tests/regression/pattern_generation/branching/old_snapshot/snapshot.yaml
+    new_snapshot_path: tests/regression/pattern_generation/branching/new_snapshot/snapshot.yaml

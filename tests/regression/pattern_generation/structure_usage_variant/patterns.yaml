@@ -1,0 +1,4 @@
+on_parse_failure: ERROR
+patterns:
+ - tests/regression/pattern_generation/structure_usage_variant/structure_usage_variant_out.ll
+ - tests/regression/pattern_generation/structure_usage_variant/structure_usage_variant_other_out.ll
