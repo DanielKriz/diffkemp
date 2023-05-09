@@ -25,14 +25,10 @@ cl::SubCommand PatternSubCommnad(
         "Subcommand for all nested options related to pattern generation");
 
 cl::opt<std::string>
-        PatternFunctionOpt("fun",
-                           cl::value_desc("function"),
-                           cl::desc("Specify function to be analysed"),
-                           cl::sub(PatternSubCommnad));
-cl::opt<std::vector<std::string>> PatternFiles(cl::Positional,
-                                               cl::Required,
-                                               cl::desc("<files>"),
-                                               cl::sub(PatternSubCommnad));
+        PatternGeneratorConfigOpt("config",
+                                  cl::value_desc("config"),
+                                  cl::desc("Specify the configuration file"),
+                                  cl::sub(PatternSubCommnad));
 // Command line options
 cl::OptionCategory SimpLLCategory("SimpLL options",
                                   "Options for controlling the SimpLL tool");
@@ -129,7 +125,7 @@ int main(int argc, const char **argv) {
     // if pattern function options is not empty, then we are using the
     // pattern subcommand
     if (PatternSubCommnad) {
-        readPatternConfig("Runtime/pattern_config.yaml");
+        readPatternConfig(PatternGeneratorConfigOpt);
     } else {
         // Parse --fun option
         auto FunName = parseFunOption();
