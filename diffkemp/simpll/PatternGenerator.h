@@ -118,7 +118,7 @@ void remapVariants(Function *src,
                    Function *dst,
                    std::vector<InstructionVariant> &vars);
 
-struct PatternCandidate {
+struct CandidateDifference {
     StringRef function{""};
     StringRef oldSnapshotPath;
     StringRef newSnapshotPath;
@@ -126,13 +126,13 @@ struct PatternCandidate {
 
 struct PatternInfo {
     std::string name;
-    std::vector<PatternCandidate> candidates;
+    std::vector<CandidateDifference> candidates;
 };
 
 namespace llvm {
 namespace yaml {
-template <> struct MappingTraits<PatternCandidate> {
-    static void mapping(IO &io, PatternCandidate &candidate) {
+template <> struct MappingTraits<CandidateDifference> {
+    static void mapping(IO &io, CandidateDifference &candidate) {
         io.mapRequired("name", candidate.function);
         io.mapRequired("old_snapshot_path", candidate.oldSnapshotPath);
         io.mapRequired("new_snapshot_path", candidate.newSnapshotPath);
@@ -140,7 +140,7 @@ template <> struct MappingTraits<PatternCandidate> {
 };
 } // namespace yaml
 } // namespace llvm
-LLVM_YAML_IS_SEQUENCE_VECTOR(PatternCandidate);
+LLVM_YAML_IS_SEQUENCE_VECTOR(CandidateDifference);
 
 namespace llvm {
 namespace yaml {
