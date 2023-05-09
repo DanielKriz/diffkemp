@@ -7,4 +7,5 @@ ninja -j4
 cd -
 ln -sr $(which pip3) /usr/bin/pip
 ln -sr $(which pip3) /usr/bin/pip3
+ln -sr $(which python3) /usr/bin/python
 python3 -m pip install -e $DIFFKEMP_DIR
