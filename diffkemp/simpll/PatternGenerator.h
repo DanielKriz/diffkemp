@@ -107,17 +107,6 @@ class PatternGenerator {
     bool isValueGlobal(Value &val, Module &mod);
 };
 
-Function *cloneFunction(Module *dstMod,
-                        Function *src,
-                        std::string prefix = "",
-                        std::vector<Type *> newArgs = {},
-                        Type *newReturnType = nullptr,
-                        StructTypeRemapper *remapper = nullptr);
-
-void remapVariants(Function *src,
-                   Function *dst,
-                   std::vector<InstructionVariant> &vars);
-
 struct CandidateDifference {
     StringRef function{""};
     StringRef oldSnapshotPath;
