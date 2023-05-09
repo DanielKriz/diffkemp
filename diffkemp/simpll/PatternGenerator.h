@@ -43,10 +43,6 @@ class PatternGenerator {
 
     virtual ~PatternGenerator() = default;
 
-    void addFileForInference(std::string patternName,
-                             std::string funcName,
-                             std::string fileName);
-
     bool addFunctionToPattern(Module *mod,
                               Function *PaternFun,
                               Function *CandidateFun,
