@@ -8,10 +8,10 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink
 
 # Add color coding to compiler diagnostics
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    add_compile_options (-fcolor-diagnostics)
+  add_compile_options(-fcolor-diagnostics)
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    add_compile_options (-fdiagnostics-color=always)
-endif()
+  add_compile_options(-fdiagnostics-color=always)
+endif ()
 
 file(GLOB srcs *.cpp)
 get_filename_component(simpll_main_path ${CMAKE_CURRENT_SOURCE_DIR}/SimpLL.cpp ABSOLUTE)
@@ -25,7 +25,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fpic -Wall -Wextra")
 if (${SANITIZE_ADDRESS})
   add_compile_options(-fsanitize=address -fno-omit-frame-pointer)
   add_link_options(-fsanitize=address -fno-omit-frame-pointer)
-endif()
+endif ()
 
 execute_process(COMMAND llvm-config --libs irreader passes support
   OUTPUT_VARIABLE llvm_libs
@@ -49,13 +49,13 @@ add_custom_command(OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/_simpll.c"
                    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                    COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/simpll_build.py")
 endif()
+if (SIMPLL_INSTALL_BINARY)
+  install(TARGETS simpll
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+endif ()
 
-if(SIMPLL_INSTALL_BINARY)
-install(TARGETS simpll
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-endif()
 install(TARGETS simpll-lib
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
