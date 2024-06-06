@@ -21,6 +21,8 @@ def get_c_declarations(header_filename):
         end = lines.index(cdef_end)
         return "".join(lines[start:end])
 
+def parse_cmd_output(cmd_out):
+    return list(filter(None, cmd_out.decode('ascii').strip().split()))
 
 def get_root_dir(path, is_develop_build):
     # The build script is located in CMAKE_BINARY_DIR/diffkemp/simpll, hence
@@ -35,17 +37,11 @@ root_dir = get_root_dir(location, is_develop_build=(len(sys.argv) == 1))
 ffibuilder.cdef(get_c_declarations(f"{root_dir}/diffkemp/simpll/library/FFI.h"))
 
 llvm_components = ["irreader", "passes", "support"]
-llvm_cflags = check_output(["llvm-config", "--cflags"])
-llvm_ldflags = check_output(["llvm-config", "--ldflags"])
-llvm_libs = check_output(["llvm-config", "--libs"] + llvm_components +
-                         ["--system-libs"])
 
-llvm_cflags = list(filter(lambda x: x != "",
-                          llvm_cflags.decode("ascii").strip().split()))
-llvm_ldflags = list(filter(lambda x: x != "",
-                           llvm_ldflags.decode("ascii").strip().split()))
-llvm_libs = list(filter(lambda x: x != "",
-                        llvm_libs.decode("ascii").strip().split()))
+llvm_cflags = parse_cmd_output(check_output(["llvm-config", "--cflags"]))
+llvm_ldflags = parse_cmd_output(check_output(["llvm-config", "--ldflags"]))
+llvm_libs = parse_cmd_output(check_output(["llvm-config", "--libs",
+                                           *llvm_components, "--system-libs"]))
 
 simpll_link_arg = f"-L{get_simpll_build_dir()}/diffkemp/simpll"
 
