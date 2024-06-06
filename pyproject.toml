@@ -27,4 +27,7 @@ packages = [
     "diffkemp",
 ]
 
+[project.scripts]
+diffkemp = 'diffkemp.cli:run_from_cli'
+
 [tool.setuptools_scm]
