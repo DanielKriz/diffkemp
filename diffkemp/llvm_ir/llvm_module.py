@@ -4,7 +4,7 @@ Functions for working with modules and parameters in them.
 """
 
 from diffkemp.simpll.library import SimpLLModule
-from diffkemp.simpll._simpll.lib import shutdownSimpLL
+from diffkemp.simpll.simpll_lib import lib
 from diffkemp.utils import get_opt_command
 import os
 import re
