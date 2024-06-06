@@ -30,9 +30,16 @@ file(GLOB pass_tests passes/*.cpp)
 add_executable(runTests SimpLLTest.cpp DifferentialFunctionComparatorTest.cpp
                FieldAccessUtilsTest.cpp DFCLlvmIrTest.cpp ${pass_tests})
 
-exec_program(llvm-config ARGS --libs irreader passes support OUTPUT_VARIABLE llvm_libs)
-exec_program(llvm-config ARGS --system-libs OUTPUT_VARIABLE system_libs)
-string(STRIP ${system_libs} system_libs)
+execute_process(
+  COMMAND llvm-config --libs irreader passes support
+  OUTPUT_VARIABLE llvm_libs
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+execute_process(
+  COMMAND llvm-config --system-libs
+  OUTPUT_VARIABLE system_libs
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
 
 target_link_libraries(runTests gtest simpll-lib ${llvm_libs})
 if (NOT ${system_libs} STREQUAL "")
