@@ -35,6 +35,8 @@ execute_process(COMMAND llvm-config --system-libs
   OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 add_library(simpll-lib ${srcs} ${passes} ${library})
+set_target_properties(simpll-lib PROPERTIES OUTPUT_NAME simpll)
+
 add_executable(simpll SimpLL.cpp)
 set_target_properties(simpll PROPERTIES PREFIX "diffkemp-")
 target_link_libraries(simpll simpll-lib ${llvm_libs} ${system_libs})
