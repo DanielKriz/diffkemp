@@ -37,10 +37,7 @@ execute_process(COMMAND llvm-config --system-libs
 add_library(simpll-lib ${srcs} ${passes} ${library})
 add_executable(simpll SimpLL.cpp)
 set_target_properties(simpll PROPERTIES PREFIX "diffkemp-")
-target_link_libraries(simpll simpll-lib ${llvm_libs})
-if (NOT ${system_libs} STREQUAL "")
-    target_link_libraries(simpll ${system_libs})
-endif()
+target_link_libraries(simpll simpll-lib ${llvm_libs} ${system_libs})
 
 if(SIMPLL_REBUILD_BINDINGS)
 add_custom_target(python-ffi ALL DEPENDS _simpll.c)
