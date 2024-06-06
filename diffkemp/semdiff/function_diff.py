@@ -1,7 +1,7 @@
 """Semantic difference of two functions using llreve and Z3 SMT solver."""
 from diffkemp.llvm_ir.source_tree import SourceNotFoundException
-from diffkemp.simpll.simpll import run_simpll, SimpLLException
 from diffkemp.semdiff.result import Result
+import diffkemp
 from diffkemp.syndiff.function_syntax_diff import syntax_diff
 from subprocess import Popen, PIPE
 from threading import Timer
@@ -211,15 +211,16 @@ def functions_diff(mod_first, mod_second,
             else:
                 # Simplify modules and get the output graph.
                 first_simpl, second_simpl, curr_result_graph, missing_defs = \
-                    run_simpll(first=mod_first.llvm, second=mod_second.llvm,
-                               fun_first=fun_first, fun_second=fun_second,
-                               var=glob_var.name if glob_var else None,
-                               config=config,
-                               suffix=glob_var.name if glob_var else "simpl",
-                               cache_dir=function_cache.directory
-                               if function_cache else None,
-                               module_cache=module_cache,
-                               modules_to_cache=modules_to_cache)
+                    diffkemp.run_simpll(
+                        first=mod_first.llvm, second=mod_second.llvm,
+                        fun_first=fun_first, fun_second=fun_second,
+                        var=glob_var.name if glob_var else None,
+                        config=config,
+                        suffix=glob_var.name if glob_var else "simpl",
+                        cache_dir=function_cache.directory
+                        if function_cache else None,
+                        module_cache=module_cache,
+                        modules_to_cache=modules_to_cache)
                 if missing_defs:
                     # If there are missing function definitions, try to find
                     # their implementation, link them to the current modules,
@@ -309,7 +310,7 @@ def functions_diff(mod_first, mod_second,
                 result.add_inner(fun_result)
     except ValueError:
         result.kind = Result.Kind.ERROR
-    except SimpLLException as e:
+    except diffkemp.SimpLLException as e:
         if config.verbosity > 0:
             print(e)
         result.kind = Result.Kind.ERROR
