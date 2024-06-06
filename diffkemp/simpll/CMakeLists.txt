@@ -13,11 +13,8 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   add_compile_options(-fdiagnostics-color=always)
 endif ()
 
-file(GLOB srcs *.cpp)
-get_filename_component(simpll_main_path ${CMAKE_CURRENT_SOURCE_DIR}/SimpLL.cpp ABSOLUTE)
-list(REMOVE_ITEM srcs ${simpll_main_path})
-file(GLOB passes passes/*.cpp)
-file(GLOB library library/*.cpp)
+file(GLOB src_files *.cpp **/*.cpp)
+list(REMOVE_ITEM src_files ${CMAKE_CURRENT_SOURCE_DIR}/SimpLL.cpp)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fpic -Wall -Wextra")
@@ -34,7 +31,7 @@ execute_process(COMMAND llvm-config --system-libs
   OUTPUT_VARIABLE system_libs
   OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-add_library(simpll-lib ${srcs} ${passes} ${library})
+add_library(simpll-lib ${src_files})
 set_target_properties(simpll-lib PROPERTIES OUTPUT_NAME simpll)
 
 add_executable(simpll SimpLL.cpp)
