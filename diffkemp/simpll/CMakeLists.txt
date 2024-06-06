@@ -31,7 +31,7 @@ execute_process(COMMAND llvm-config --system-libs
   OUTPUT_VARIABLE system_libs
   OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-add_library(simpll-lib ${src_files})
+add_library(simpll-lib STATIC ${src_files})
 set_target_properties(simpll-lib PROPERTIES OUTPUT_NAME simpll)
 
 add_executable(simpll SimpLL.cpp)
