@@ -9,10 +9,10 @@ Python library functions are redefined here to be RPython-compatible.
 """
 # TODO: Decompose simultaneous compiling and linking to get individual .ll
 #       files out of it; support other GCC languages than C (Fortran, C++)
-from diffkemp.llvm_ir.compiler import get_clang_default_options
 import os
 import shutil
 import sys
+import diffkemp
 
 
 wrapper_env_vars = {
@@ -185,7 +185,7 @@ def wrapper(argv):
         # Note: clang uses the last specified optimization level so
         # extending with the default options must be done before
         # extending with the clang_append option.
-        clang_argv.extend(get_clang_default_options(
+        clang_argv.extend(diffkemp.get_clang_default_options(
             default_optim=not no_opt_override))
         clang_argv.extend(append)
         # TODO: allow compiling into binary IR
