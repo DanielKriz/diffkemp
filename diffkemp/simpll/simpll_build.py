@@ -4,6 +4,7 @@ from subprocess import check_output
 import os
 import sys
 
+
 def get_simpll_build_dir():
     """
     Return the current SimpLL build directory as specified
@@ -30,8 +31,10 @@ def get_c_declarations(header_filename):
         end = lines.index(cdef_end)
         return "".join(lines[start:end])
 
+
 def parse_cmd_output(cmd_out):
     return list(filter(None, cmd_out.decode('ascii').strip().split()))
+
 
 def get_root_dir(path, is_develop_build):
     # The build script is located in CMAKE_BINARY_DIR/diffkemp/simpll, hence
@@ -40,10 +43,13 @@ def get_root_dir(path, is_develop_build):
         return os.path.abspath(f'{path}/../../..')
     return os.path.abspath(f'{path}/../..')
 
+
 ffibuilder = FFI()
 location = os.path.dirname(os.path.abspath(__file__))
 root_dir = get_root_dir(location, is_develop_build=(len(sys.argv) == 1))
-ffibuilder.cdef(get_c_declarations(f"{root_dir}/diffkemp/simpll/library/FFI.h"))
+path_to_ffi_header = "diffkemp/simpll/library/FFI.h"
+
+ffibuilder.cdef(get_c_declarations(f"{root_dir}/{path_to_ffi_header}"))
 
 llvm_components = ["irreader", "passes", "support"]
 
