@@ -122,4 +122,4 @@ jobs:
         shell: bash
         run: >
           nix develop .#diffkemp-llvm${{ matrix.llvm }} --command bash -c
-          pytest tests -v
+          ${{ github.workspace }}/build/bin/run_e2e_tests.py -v --ignore='kernel/*'
