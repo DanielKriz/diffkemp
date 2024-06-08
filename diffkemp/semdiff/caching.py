@@ -8,7 +8,7 @@ by the ComparisonGraph class.
 """
 
 from collections import deque
-from diffkemp.semdiff.result import Result
+from diffkemp.semdiff import Result
 from enum import IntEnum
 import os
 

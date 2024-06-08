@@ -1,8 +1,8 @@
 """Semantic difference of two functions using llreve and Z3 SMT solver."""
-from diffkemp.llvm_ir.source_tree import SourceNotFoundException
-from diffkemp.semdiff.result import Result
-import diffkemp
-from diffkemp.syndiff.function_syntax_diff import syntax_diff
+from diffkemp.llvm_ir import SourceNotFoundException
+from diffkemp.semdiff import Result
+from diffkemp.syndiff import syntax_diff
+from diffkemp.simpll import SimpLLException, run_simpll
 from subprocess import Popen, PIPE
 from threading import Timer
 import sys
@@ -211,7 +211,7 @@ def functions_diff(mod_first, mod_second,
             else:
                 # Simplify modules and get the output graph.
                 first_simpl, second_simpl, curr_result_graph, missing_defs = \
-                    diffkemp.run_simpll(
+                    run_simpll(
                         first=mod_first.llvm, second=mod_second.llvm,
                         fun_first=fun_first, fun_second=fun_second,
                         var=glob_var.name if glob_var else None,
@@ -310,7 +310,7 @@ def functions_diff(mod_first, mod_second,
                 result.add_inner(fun_result)
     except ValueError:
         result.kind = Result.Kind.ERROR
-    except diffkemp.SimpLLException as e:
+    except SimpLLException as e:
         if config.verbosity > 0:
             print(e)
         result.kind = Result.Kind.ERROR

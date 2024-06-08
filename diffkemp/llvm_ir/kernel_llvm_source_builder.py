@@ -1,11 +1,9 @@
 """
 Building kernel sources into LLVM IR.
 """
-from diffkemp.llvm_ir.compiler import get_clang_default_options
-from diffkemp.llvm_ir.llvm_module import LlvmModule
-from diffkemp.llvm_ir.llvm_source_finder import LlvmSourceFinder, \
-    SourceNotFoundException
-from diffkemp.llvm_ir.optimiser import opt_llvm, BuildException
+from diffkemp.llvm_ir import (get_clang_default_options, LlvmModule, opt_llvm,
+                              LlvmSourceFinder, SourceNotFoundException,
+                              BuildException)
 import os
 from subprocess import check_call, check_output, CalledProcessError
 

@@ -1,9 +1,8 @@
 """
 LLVM source builder for single C file.
 """
-from diffkemp.llvm_ir.compiler import get_clang_default_options
-from diffkemp.llvm_ir.optimiser import opt_llvm
-from diffkemp.llvm_ir.single_llvm_finder import SingleLlvmFinder
+from diffkemp.llvm_ir import (get_clang_default_options, opt_llvm,
+                              SingleLlvmFinder)
 from diffkemp.utils import get_functions_from_llvm
 import os
 from subprocess import check_call

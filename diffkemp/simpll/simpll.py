@@ -1,11 +1,10 @@
 """
 Simplifying LLVM modules with the SimpLL tool.
 """
-import diffkemp
-from diffkemp.semdiff.caching import ComparisonGraph
-from diffkemp.simpll.library import SimpLLModule
-from diffkemp.simpll.simpll_lib import ffi, lib
+from diffkemp.semdiff import ComparisonGraph
+from diffkemp.simpll import (SimpLLModule, ffi, lib)
 from diffkemp.utils import get_simpll_build_dir, get_opt_command
+import diffkemp
 import os
 from subprocess import check_call, check_output, CalledProcessError
 import yaml

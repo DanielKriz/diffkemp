@@ -1,11 +1,4 @@
-from .utils import *
-from .simpll import *
-from .llvm_ir import *
-from .syndiff import *
-from .semdiff import *
-from .config import *
-from .diffkemp import *
-from .cli import *
-from .output import *
-from .snapshot import *
-from .building import *
+import sys
+
+if not sys.version_info.major < 3:
+    from .utils import *

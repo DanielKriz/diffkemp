@@ -3,7 +3,7 @@ LLVM IR modules.
 Functions for working with modules and parameters in them.
 """
 
-import diffkemp
+from diffkemp.simpll import (SimpLLModule, SimpLLException, lib)
 from diffkemp.utils import get_opt_command
 import os
 import re
@@ -55,7 +55,7 @@ class LlvmModule:
     def parse_module(self, force=False):
         """Parse module file into LLVM module using SimpLL"""
         if force or self.llvm_module is None:
-            self.llvm_module = diffkemp.SimpLLModule(self.llvm)
+            self.llvm_module = SimpLLModule(self.llvm)
 
     def clean_module(self):
         """Free the parsed LLVM module."""
@@ -65,7 +65,7 @@ class LlvmModule:
     @staticmethod
     def clean_all():
         """Clean all statically managed LLVM memory."""
-        diffkemp.shutdownSimpLL()
+        lib.shutdownSimpLL()
 
     def link_modules(self, modules):
         """Link module against a list of other modules."""

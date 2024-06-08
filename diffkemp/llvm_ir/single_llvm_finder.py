@@ -2,7 +2,7 @@
 LLVM source finder for projects that are entirely compiled into a single
 LLVM IR file.
 """
-from diffkemp.llvm_ir.llvm_source_finder import LlvmSourceFinder
+from diffkemp.llvm_ir import LlvmSourceFinder
 import os
 
 

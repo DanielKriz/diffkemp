@@ -4,11 +4,8 @@ Contains necessary information about the snapshot and (mainly) holds
 the function list containing mapping of the compared functions to LLVM files
 with their definitions.
 """
-from diffkemp.llvm_ir.llvm_module import LlvmModule
-from diffkemp.llvm_ir.kernel_source_tree import KernelSourceTree
-from diffkemp.llvm_ir.source_tree import SourceTree
-from diffkemp.llvm_ir.kernel_llvm_source_builder import KernelLlvmSourceBuilder
-from diffkemp.llvm_ir.wrapper_build_finder import WrapperBuildFinder
+from diffkemp.llvm_ir import (LlvmModule, KernelSourceTree, SourceTree,
+                              KernelLlvmSourceBuilder, WrapperBuildFinder)
 from diffkemp.utils import get_llvm_version
 import datetime
 import os

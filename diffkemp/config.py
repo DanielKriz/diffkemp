@@ -1,7 +1,7 @@
 """Configuration of the tool."""
-from diffkemp.semdiff.custom_pattern_config import CustomPatternConfig
+from diffkemp.semdiff import CustomPatternConfig
 from diffkemp.snapshot import Snapshot
-from diffkemp.simpll.simpll_lib import ffi
+from diffkemp.simpll import ffi
 import os
 
 
