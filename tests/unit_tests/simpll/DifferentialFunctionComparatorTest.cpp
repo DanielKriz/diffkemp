@@ -1228,6 +1228,9 @@ TEST_F(DifferentialFunctionComparatorTest, CmpValuesMacroConstantMap) {
     ASSERT_EQ(DiffComp->testCmpValues(ConstL, ConstR), 1);
 }
 
+#if LLVM_VERSION_MAJOR <= 17
+// This kind of expression is now deprecated in LLVM, for more information see:
+// https://discourse.llvm.org/t/rfc-remove-most-constant-expressions/63179/30
 /// Tests comparison of constant expressions containing bitcasts.
 TEST_F(DifferentialFunctionComparatorTest, CmpConstants) {
     Conf.Patterns.TypeCasts = true;
@@ -1241,6 +1244,7 @@ TEST_F(DifferentialFunctionComparatorTest, CmpConstants) {
     ASSERT_EQ(DiffComp->testCmpConstants(ConstL2, ConstR), -1);
     ASSERT_EQ(DiffComp->testCmpConstants(ConstR, ConstL2), 1);
 }
+#endif // LLVM_VERSION_MAJOR
 
 /// Tests comparison of field access operations with the same offset.
 TEST_F(DifferentialFunctionComparatorTest, CmpFieldAccessSameOffset) {
