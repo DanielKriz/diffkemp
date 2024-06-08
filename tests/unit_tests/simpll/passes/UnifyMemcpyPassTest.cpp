@@ -19,6 +19,12 @@
 #include <llvm/Passes/PassBuilder.h>
 #include <passes/UnifyMemcpyPass.h>
 
+#if LLVM_MAJOR_VERSION >= 18
+#define GET_INT8_PTR_TYPE llvm::Type::getInt8PtrTy
+#else
+#define GET_INT8_PTR_TYPE llvm::PointerType::getUnqual
+#endif // LLVM_MAJOR_VERSION
+
 /// Creates a function with two memcpy intrinsics - one with alignment set to
 /// 0, the second with alignment set to 2. The first one should be changed to
 /// 1 by the pass.
@@ -132,8 +138,8 @@ TEST(UnifyMemcpyPassTest, KernelMemcpyToIntrinsic) {
     // Create the memcpy function.
     Function *Memcpy =
             Function::Create(FunctionType::get(Type::getVoidTy(Ctx),
-                                               {Type::getInt8PtrTy(Ctx),
-                                                Type::getInt8PtrTy(Ctx),
+                                               {GET_INT8_PTR_TYPE(Ctx),
+                                                GET_INT8_PTR_TYPE(Ctx),
                                                 Type::getInt32Ty(Ctx)},
                                                false),
                              GlobalValue::ExternalLinkage,
