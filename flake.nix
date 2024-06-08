@@ -12,8 +12,8 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
 
-      llvmVersionMin = 12;
-      llvmVersionMax = 17;
+      llvmVersionMin = 9;
+      llvmVersionMax = 18;
       llvmVersions = pkgs.lib.lists.range llvmVersionMin llvmVersionMax;
 
       mkDiffkemp =
