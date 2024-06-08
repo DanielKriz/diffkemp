@@ -41,10 +41,7 @@ execute_process(
   OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-target_link_libraries(runTests gtest simpll-lib ${llvm_libs})
-if (NOT ${system_libs} STREQUAL "")
-  target_link_libraries(runTests gtest ${system_libs})
-endif()
+target_link_libraries(runTests gtest simpll-lib ${llvm_libs} ${system_libs})
 
 include(GoogleTest)
 gtest_discover_tests(runTests)
