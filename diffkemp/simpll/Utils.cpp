@@ -37,6 +37,28 @@
 #include <set>
 #include <sstream>
 
+#if LLVM_VERSION_MAJOR >= 18
+
+bool refHasSuffix(StringRef ref, StringRef suffix) {
+    return ref.ends_with(suffix);
+}
+
+bool refHasPrefix(StringRef ref, StringRef prefix) {
+    return ref.starts_with(prefix);
+}
+
+#else
+
+bool refHasSuffix(StringRef ref, StringRef suffix) {
+    return ref.endswith(suffix);
+}
+
+bool refHasPrefix(StringRef ref, StringRef prefix) {
+    return ref.startswith(prefix);
+}
+
+#endif // LLVM_VERSION_MAJOR
+
 /// Level of debug indentation. Each level corresponds to two characters.
 static unsigned int debugIndentLevel = 0;
 
@@ -158,7 +180,7 @@ std::string dropSuffix(std::string Name) {
 /// Join directory path with a filename in case the filename does not already
 /// contain the directory.
 std::string joinPath(StringRef DirName, StringRef FileName) {
-    return FileName.startswith(DirName)
+    return refHasPrefix(FileName, DirName)
                    ? FileName.str()
                    : DirName.str() + sys::path::get_separator().str()
                              + FileName.str();
@@ -458,9 +480,9 @@ const Instruction *getConstExprAsInstruction(const ConstantExpr *CEx) {
 std::string getIdentifierForType(Type *Ty) {
     if (auto STy = dyn_cast<StructType>(Ty)) {
         // Remove prefix and append "struct"
-        if (STy->getStructName().startswith("union"))
+        if (refHasPrefix(STy->getStructName(), "union"))
             return "union " + STy->getStructName().str().substr(6);
-        else if (STy->getStructName().startswith("struct"))
+        else if (refHasPrefix(STy->getStructName(), "struct"))
             return "struct " + STy->getStructName().str().substr(7);
         else
             return "<unknown>";
@@ -788,7 +810,7 @@ bool namesMatch(const StringRef &L, const StringRef &R, bool IsLeftSide) {
 
     // If no prefix is present, the names are not equal.
     StringRef NameRRef = NameR;
-    if (!NameRRef.startswith(CustomPatternSet::DefaultPrefix))
+    if (!refHasPrefix(NameRRef, CustomPatternSet::DefaultPrefix))
         return false;
 
     // Remove all prefixes.
@@ -797,7 +819,7 @@ bool namesMatch(const StringRef &L, const StringRef &R, bool IsLeftSide) {
     StringRef RealNameRRef =
             NameRRef.substr(CustomPatternSet::DefaultPrefix.size());
 
-    if (RealNameRRef.startswith(PrefixR))
+    if (refHasPrefix(RealNameRRef, PrefixR))
         RealNameRRef = RealNameRRef.substr(PrefixR.size());
 
     // Compare the names without prefixes.

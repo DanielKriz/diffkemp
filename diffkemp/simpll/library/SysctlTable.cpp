@@ -21,8 +21,8 @@ bool matches(std::string Name, std::string Pattern) {
     if (Pattern == "*")
         return true;
 
-    if (StringRef(Pattern).startswith("{")
-        && StringRef(Pattern).endswith("}")) {
+    if (refHasPrefix(StringRef(Pattern), "{")
+        && refHasSuffix(StringRef(Pattern), "}")) {
         std::istringstream MatchListStream;
         MatchListStream.str(Pattern.substr(1, Pattern.size() - 2));
 

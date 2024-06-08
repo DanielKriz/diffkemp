@@ -225,4 +225,7 @@ const AllocaInst *getAllocaOp(const InstType *Inst) {
     return getAllocaFromPtr(Inst->getPointerOperand());
 }
 
+bool refHasSuffix(StringRef ref, StringRef suffix);
+bool refHasPrefix(StringRef ref, StringRef prefix);
+
 #endif // DIFFKEMP_SIMPLL_UTILS_H
