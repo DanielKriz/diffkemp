@@ -5,7 +5,7 @@ using the given parameter is compared individually.
 """
 
 from diffkemp.llvm_ir import BuildException
-from diffkemp.semdiff import (functions_diff, Result)
+from diffkemp.semdiff import Result, functions_diff
 
 
 def diff_all_modules_using_global(glob_first, glob_second, config):

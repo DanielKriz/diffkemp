@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 from cffi import FFI
-from subprocess import check_output
 import os
 import sys
+from subprocess import check_output
 
 
 def get_simpll_build_dir():

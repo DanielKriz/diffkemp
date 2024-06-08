@@ -1,11 +1,12 @@
 """Semantic difference of two functions using llreve and Z3 SMT solver."""
+import sys
+from subprocess import PIPE, Popen
+from threading import Timer
+
 from diffkemp.llvm_ir import SourceNotFoundException
 from diffkemp.semdiff import Result
-from diffkemp.syndiff import syntax_diff
 from diffkemp.simpll import SimpLLException, run_simpll
-from subprocess import Popen, PIPE
-from threading import Timer
-import sys
+from diffkemp.syndiff import syntax_diff
 
 
 def _kill(processes):

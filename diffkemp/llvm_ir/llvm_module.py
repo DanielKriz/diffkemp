@@ -3,12 +3,13 @@ LLVM IR modules.
 Functions for working with modules and parameters in them.
 """
 
-from diffkemp.simpll import (SimpLLModule, SimpLLException, lib)
-from diffkemp.utils import get_opt_command
 import os
 import re
 import shutil
-from subprocess import check_call, CalledProcessError
+from subprocess import CalledProcessError, check_call
+
+from diffkemp.simpll import SimpLLException, SimpLLModule, lib
+from diffkemp.utils import get_opt_command
 
 # Set of standard functions that are supported, so they should not be
 # included in function collecting.

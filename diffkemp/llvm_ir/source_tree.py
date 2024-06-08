@@ -2,9 +2,10 @@
 Class representing source tree of the analysed project.
 Contains functions for getting LLVM modules from the project.
 """
-from diffkemp.llvm_ir import (LlvmModule, SourceNotFoundException)
 import os
 import shutil
+
+from diffkemp.llvm_ir import LlvmModule, SourceNotFoundException
 
 
 class SourceTree:

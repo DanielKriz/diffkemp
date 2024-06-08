@@ -1,23 +1,25 @@
-from diffkemp.building.cc_wrapper import get_cc_wrapper_path, wrapper_env_vars
-from diffkemp.config import Config
-from diffkemp.snapshot import Snapshot
-from diffkemp.llvm_ir import (opt_llvm, BuildException, KernelSourceTree,
-                              KernelLlvmSourceBuilder, SourceTree, LlvmParam,
-                              LlvmModule, SourceNotFoundException, SingleLlvmFinder,
-                              WrapperBuildFinder, SingleCBuilder)
-from diffkemp.semdiff import (SimpLLCache, functions_diff, Result)
-from diffkemp.output import YamlOutput
-from diffkemp.syndiff import unified_syntax_diff
-from http.server import HTTPServer, SimpleHTTPRequestHandler
-from subprocess import check_call, CalledProcessError
-from tempfile import mkdtemp
-from timeit import default_timer
 import errno
 import os
 import re
-import sys
 import shutil
+import sys
+from http.server import HTTPServer, SimpleHTTPRequestHandler
+from subprocess import CalledProcessError, check_call
+from tempfile import mkdtemp
+from timeit import default_timer
 import yaml
+
+from diffkemp.building.cc_wrapper import get_cc_wrapper_path, wrapper_env_vars
+from diffkemp.config import Config
+from diffkemp.llvm_ir import (BuildException, KernelLlvmSourceBuilder,
+                              KernelSourceTree, LlvmModule, LlvmParam,
+                              SingleCBuilder, SingleLlvmFinder,
+                              SourceNotFoundException, SourceTree,
+                              WrapperBuildFinder, opt_llvm)
+from diffkemp.output import YamlOutput
+from diffkemp.semdiff import Result, SimpLLCache, functions_diff
+from diffkemp.snapshot import Snapshot
+from diffkemp.syndiff import unified_syntax_diff
 
 VIEW_INSTALL_DIR = "/var/lib/diffkemp/view"
 # Name of YAML output file created by diffkemp compare command.

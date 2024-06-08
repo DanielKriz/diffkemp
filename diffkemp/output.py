@@ -1,7 +1,8 @@
-from diffkemp.semdiff import (ComparisonGraph, Result)
-from diffkemp.utils import get_end_line, EndLineNotFound
 import os
 import yaml
+
+from diffkemp.semdiff import ComparisonGraph, Result
+from diffkemp.utils import EndLineNotFound, get_end_line
 
 
 class YamlOutput:

@@ -1,8 +1,9 @@
 """Configuration of the tool."""
-from diffkemp.semdiff import CustomPatternConfig
-from diffkemp.snapshot import Snapshot
-from diffkemp.simpll import ffi
 import os
+
+from diffkemp.semdiff import CustomPatternConfig
+from diffkemp.simpll import ffi
+from diffkemp.snapshot import Snapshot
 
 
 class ConfigException(Exception):

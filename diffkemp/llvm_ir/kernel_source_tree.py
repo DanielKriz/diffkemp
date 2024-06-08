@@ -1,9 +1,10 @@
 """
 Source tree of the Linux kernel.
 """
-from diffkemp.llvm_ir import (SourceTree, LlvmSysctlModule,
-                              SourceNotFoundException)
 import os
+
+from diffkemp.llvm_ir import (LlvmSysctlModule, SourceNotFoundException,
+                              SourceTree)
 
 
 class KernelSourceTree(SourceTree):
