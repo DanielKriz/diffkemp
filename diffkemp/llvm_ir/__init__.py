@@ -5,11 +5,10 @@ simple analyses over the created LLVM modules and functions.
 """
 import sys
 
-if sys.version_info.major < 3:
-    # only this one needs to be python2 compliant
-    from .compiler import *
-else:
-    from .compiler import *
+# only this one needs to be python2 compliant
+from .compiler import *
+
+if sys.version_info.major >= 3:
     from .optimiser import *
     from .llvm_module import *
     from .llvm_source_finder import *
