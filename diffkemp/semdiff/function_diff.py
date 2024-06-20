@@ -3,9 +3,11 @@ import sys
 from subprocess import PIPE, Popen
 from threading import Timer
 
-from diffkemp.llvm_ir import SourceNotFoundException
+# from diffkemp.llvm_ir import SourceNotFoundException
+import diffkemp.llvm_ir as llvm_ir
 from diffkemp.semdiff import Result
-from diffkemp.simpll import SimpLLException, run_simpll
+import diffkemp.simpll as simpll
+# from diffkemp.simpll import SimpLLException, run_simpll
 from diffkemp.syndiff import syntax_diff
 
 
@@ -32,12 +34,12 @@ def _link_symbol_def(snapshot, module, symbol):
 
     try:
         new_mod = snapshot.snapshot_tree.get_module_for_symbol(symbol, time)
-    except SourceNotFoundException:
+    except llvm_ir.SourceNotFoundException:
         if snapshot.source_tree:
             try:
                 new_mod = snapshot.source_tree.get_module_for_symbol(symbol,
                                                                      time)
-            except SourceNotFoundException:
+            except llvm_ir.SourceNotFoundException:
                 pass
 
     if new_mod:
@@ -212,7 +214,7 @@ def functions_diff(mod_first, mod_second,
             else:
                 # Simplify modules and get the output graph.
                 first_simpl, second_simpl, curr_result_graph, missing_defs = \
-                    run_simpll(
+                    simpll.run_simpll(
                         first=mod_first.llvm, second=mod_second.llvm,
                         fun_first=fun_first, fun_second=fun_second,
                         var=glob_var.name if glob_var else None,
@@ -311,7 +313,7 @@ def functions_diff(mod_first, mod_second,
                 result.add_inner(fun_result)
     except ValueError:
         result.kind = Result.Kind.ERROR
-    except SimpLLException as e:
+    except simpll.SimpLLException as e:
         if config.verbosity > 0:
             print(e)
         result.kind = Result.Kind.ERROR
