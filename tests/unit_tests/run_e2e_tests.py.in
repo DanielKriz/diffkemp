@@ -4,4 +4,9 @@ import pytest
 
 if __name__ == "__main__":
     sys.path.append("${CMAKE_BINARY_DIR}/diffkemp/simpll")
-    sys.exit(pytest.main(["-x", "${CMAKE_BINARY_DIR}/../"]))
+    sys.exit(pytest.main([
+        "-x",
+        "${CMAKE_BINARY_DIR}/../",
+        # Pass the CLI arguments to pytest
+        *sys.argv[1:]
+    ]))
