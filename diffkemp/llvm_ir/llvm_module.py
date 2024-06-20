@@ -8,7 +8,7 @@ import re
 import shutil
 from subprocess import CalledProcessError, check_call
 
-from diffkemp.simpll import SimpLLException, SimpLLModule, lib
+from diffkemp.simpll import SimpLLModule, lib
 from diffkemp.utils import get_opt_command
 
 # Set of standard functions that are supported, so they should not be
