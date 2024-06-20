@@ -11,7 +11,6 @@ import os
 import shutil
 import sys
 
-import diffkemp
 # TODO: Decompose simultaneous compiling and linking to get individual .ll
 #       files out of it; support other GCC languages than C (Fortran, C++)
 from diffkemp.llvm_ir import get_clang_default_options
