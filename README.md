@@ -230,3 +230,4 @@ There is a number of publications and talks related to DiffKemp:
   Malík, V., Šilling, P., Vojnar, T. (2022). Applying Custom Patterns in
   Semantic Equality Analysis. In: Koulali, MA., Mezini, M. (eds) Networked
   Systems. NETYS 2022.
+
