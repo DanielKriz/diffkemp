@@ -48,6 +48,8 @@ jobs:
           echo "/usr/lib/llvm-${{ env.llvm }}/bin" >> $GITHUB_PATH
           cmake -S . -B build -GNinja -DCMAKE_BUILD_TYPE=Release
           sudo ninja -C build install
+          virtualenv -p python3 venv
+          source venv/bin/activate
           pip install .
           # No need to install binary with python build
           sudo install -m 0755 build/bin/diffkemp /usr/bin/diffkemp
@@ -59,6 +61,8 @@ jobs:
           echo "/usr/lib/llvm-${{ env.llvm }}/bin" >> $GITHUB_PATH
           cmake -S . -B build -GNinja -DCMAKE_BUILD_TYPE=Debug
           sudo ninja -C build
+          virtualenv -p python3 venv
+          source venv/bin/activate
           pip install -e .
       - name: Check by building and comparing make-based project
         run: |
