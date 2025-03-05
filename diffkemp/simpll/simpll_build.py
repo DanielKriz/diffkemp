@@ -61,7 +61,7 @@ ffibuilder.set_source(
     language="c++",
     libraries=["simpll-lib"],
     extra_compile_args=[f"-I{include_path}"] + llvm_cflags,
-    extra_link_args=[simpll_link_arg, "-lstdc++"] + llvm_ldflags + llvm_libs)
+    extra_link_args=[simpll_link_arg, "-lstdc++", "-lz3"] + llvm_ldflags + llvm_libs)
 
 if __name__ == "__main__":
     ffibuilder.compile()
