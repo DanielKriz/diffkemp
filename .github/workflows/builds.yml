@@ -66,6 +66,7 @@ jobs:
           pip install -e .
       - name: Check by building and comparing make-based project
         run: |
+          source venv/bin/activate
           ${{matrix.diffkemp-bin}} build tests/testing_projects/make_based/ old-snapshot
           ${{matrix.diffkemp-bin}} build tests/testing_projects/make_based/ new-snapshot
           ${{matrix.diffkemp-bin}} compare old-snapshot new-snapshot
