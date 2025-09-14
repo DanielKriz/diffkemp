@@ -24,7 +24,11 @@
 #include "SimplifyKernelGlobalsPass.h"
 #include "Utils.h"
 
+#include <llvm/IR/Module.h>
+#include <llvm/IR/GlobalVariable.h>
+#include <llvm/IR/Analysis.h>
 #include <llvm/IR/Constants.h>
+#include <llvm/IR/SymbolTableListTraits.h>
 
 /// Check if a global variable with the given name is supported to be merged in
 /// case multiple instances of the same variable with different suffices exist.
