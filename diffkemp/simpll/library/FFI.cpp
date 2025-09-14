@@ -19,8 +19,11 @@
 #include "library/DiffKempUtils.h"
 #include "library/SysctlTable.h"
 #include "passes/CalledFunctionsAnalysis.h"
-#include <cstring>
+
 #include <llvm/Transforms/Utils/Cloning.h>
+#include <llvm/Support/ManagedStatic.h>
+
+#include <cstring>
 #include <unordered_map>
 
 /// Map to store LLVMContext objects for modules.

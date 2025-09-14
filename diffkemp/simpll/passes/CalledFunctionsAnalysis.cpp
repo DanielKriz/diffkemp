@@ -14,9 +14,11 @@
 
 #include "CalledFunctionsAnalysis.h"
 #include "Utils.h"
+
 #include <llvm/IR/Instructions.h>
 #include <llvm/IR/Operator.h>
 #include <llvm/IR/User.h>
+#include <llvm/IR/GlobalVariable.h>
 
 AnalysisKey CalledFunctionsAnalysis::Key;
 
