@@ -233,4 +233,7 @@ bool hasSuffix(StringRef ref, StringRef suffix) noexcept;
 /// LLVM Version independent predicate whether string ref contains some prefix.
 bool hasPrefix(StringRef ref, StringRef prefix) noexcept;
 
+/// Checks whether two strings are equal.
+bool equals(StringRef lhs, StringRef rhs) noexcept;
+
 #endif // DIFFKEMP_SIMPLL_UTILS_H

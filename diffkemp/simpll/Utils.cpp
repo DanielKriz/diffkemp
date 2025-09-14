@@ -39,6 +39,18 @@
 #include <set>
 #include <sstream>
 
+
+#if LLVM_VERSION_MAJOR >= 19
+
+bool equals(StringRef lhs, StringRef rhs) noexcept { return lhs == rhs; }
+
+#else
+
+bool equals(StringRef lhs, StringRef rhs) noexcept { return lhs.equals(rhs); }
+
+#endif
+
+
 #if LLVM_VERSION_MAJOR >= 18
 
 bool hasSuffix(StringRef ref, StringRef suffix) noexcept {
