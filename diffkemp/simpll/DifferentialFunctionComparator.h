@@ -107,6 +107,7 @@ class DifferentialFunctionComparator : public FunctionComparator {
     /// Compares array types with equivalent element types and all integer types
     /// as equal when comparing the control flow only.
     int cmpTypes(Type *L, Type *R) const override;
+    int cmpAPFloats(const APFloat &L, const APFloat &R) const override;
     /// Do not compare bitwidth when comparing the control flow only.
     int cmpAPInts(const APInt &L, const APInt &R) const override;
     /// Does additional comparisons based on the C source to determine whether

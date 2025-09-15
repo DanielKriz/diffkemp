@@ -1784,6 +1784,19 @@ int DifferentialFunctionComparator::cmpTypes(Type *L, Type *R) const {
     RETURN_WITH_LOG_NEQ(cmpTypes(AL->getElementType(), AR->getElementType()));
 }
 
+int DifferentialFunctionComparator::cmpAPFloats(const APFloat &L,
+                                              const APFloat &R) const {
+    int Result = FunctionComparator::cmpAPFloats(L, R);
+    if (!config.Patterns.TypeCasts || !Result) {
+        return Result;
+    } else {
+        // TODO: This needs to be resolved
+        return false;
+    }
+
+    return 0;
+}
+
 /// Do not compare integer bitwidth when ignoring the type casts.
 int DifferentialFunctionComparator::cmpAPInts(const APInt &L,
                                               const APInt &R) const {
@@ -1799,6 +1812,8 @@ int DifferentialFunctionComparator::cmpAPInts(const APInt &L,
 
     return 0;
 }
+
+
 
 /// Comparison of memset functions.
 /// Handles situation when memset sets the memory occupied by a structure, but
