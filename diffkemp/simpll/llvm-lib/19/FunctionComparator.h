@@ -68,7 +68,7 @@ class GlobalNumberState {
 public:
   GlobalNumberState() = default;
 
-  uint64_t getNumber(GlobalValue* Global) {
+  virtual uint64_t getNumber(GlobalValue* Global) {
     ValueNumberMap::iterator MapIter;
     bool Inserted;
     std::tie(MapIter, Inserted) = GlobalNumbers.insert({Global, NextNumber});
@@ -77,11 +77,11 @@ public:
     return MapIter->second;
   }
 
-  void erase(GlobalValue *Global) {
+  virtual void erase(GlobalValue *Global) {
     GlobalNumbers.erase(Global);
   }
 
-  void clear() {
+  virtual void clear() {
     GlobalNumbers.clear();
   }
 };
